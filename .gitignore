@@ -3,3 +3,4 @@ Makefile*
 ui_*.h
 debug/
 release/
+*.user
