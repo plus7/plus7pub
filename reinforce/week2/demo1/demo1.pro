@@ -12,5 +12,6 @@ SOURCES += main.cpp \
     agent.cpp
 HEADERS += mainwindow.h \
     environment.h \
-    agent.h
+    agent.h \
+    defs.h
 FORMS += mainwindow.ui
