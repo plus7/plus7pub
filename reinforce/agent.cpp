@@ -32,6 +32,36 @@ void Agent::initQ()
     }
 }
 
+void Agent::changeAlpha(int i)
+{
+    setAlpha(i/10);
+}
+
+void Agent::changeGamma(int i)
+{
+    setGamma(i/10);
+}
+
+void Agent::changeEps(int i)
+{
+    switch(i){
+        case 0:
+        setEps(0);
+        case 1:
+        setEps(0.0001);
+        case 2:
+        setEps(0.001);
+        case 3:
+        setEps(0.01);
+        case 4:
+        setEps(0.1);
+        case 5:
+        setEps(1.0);
+        default:
+        setEps(0);
+    }
+}
+
 Action Agent::selectAction(Status s)
 {
     Reward max = -100000000;
@@ -47,60 +77,60 @@ Action Agent::selectAction(Status s)
     }
     p = m_Q.find(MyQ(s,Action(0,-1)));
     if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(0,-1);}
+        if (p.value() > max) {max = p.value(); a.first = 0; a.second = -1;}
     }
     p = m_Q.find(MyQ(s,Action(0,1)));
     if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(0,1);}
+        if (p.value() > max) {max = p.value(); a.first = 0; a.second = 1;}
     }
     p = m_Q.find(MyQ(s,Action(1,1)));
     if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(1,1);}
+        if (p.value() > max) {max = p.value(); a.first = 1; a.second = 1;}
     }
     p = m_Q.find(MyQ(s,Action(-1,1)));
     if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(-1,1);}
+        if (p.value() > max) {max = p.value(); a.first = -1; a.second = 1;}
     }
     p = m_Q.find(MyQ(s,Action(1,-1)));
     if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(1,-1);}
+        if (p.value() > max) {max = p.value(); a.first = 1; a.second = -1;}
     }
     p = m_Q.find(MyQ(s,Action(-1,-1)));
     if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(-1,-1);}
+        if (p.value() > max) {max = p.value(); a.first = -1; a.second = -1;}
     }
-    p = m_Q.find(MyQ(s,Action(2,0)));
-    if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(2,0);}
-    }
-    p = m_Q.find(MyQ(s,Action(-2,0)));
-    if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(-2,0);}
-    }
-    p = m_Q.find(MyQ(s,Action(0,-2)));
-    if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(0,-2);}
-    }
-    p = m_Q.find(MyQ(s,Action(0,2)));
-    if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(0,2);}
-    }
-    p = m_Q.find(MyQ(s,Action(2,2)));
-    if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(2,2);}
-    }
-    p = m_Q.find(MyQ(s,Action(-2,2)));
-    if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(-2,2);}
-    }
-    p = m_Q.find(MyQ(s,Action(2,-2)));
-    if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(2,-2);}
-    }
-    p = m_Q.find(MyQ(s,Action(-2,-2)));
-    if(p != m_Q.end()){
-        if (p.value() > max) {max = p.value(); a = Action(-2,-2);}
-    }
+//    p = m_Q.find(MyQ(s,Action(2,0)));
+//    if(p != m_Q.end()){
+//        if (p.value() > max) {max = p.value(); a = Action(2,0);}
+//    }
+//    p = m_Q.find(MyQ(s,Action(-2,0)));
+//    if(p != m_Q.end()){
+//        if (p.value() > max) {max = p.value(); a = Action(-2,0);}
+//    }
+//    p = m_Q.find(MyQ(s,Action(0,-2)));
+//    if(p != m_Q.end()){
+//        if (p.value() > max) {max = p.value(); a = Action(0,-2);}
+//    }
+//    p = m_Q.find(MyQ(s,Action(0,2)));
+//    if(p != m_Q.end()){
+//        if (p.value() > max) {max = p.value(); a = Action(0,2);}
+//    }
+//    p = m_Q.find(MyQ(s,Action(2,2)));
+//    if(p != m_Q.end()){
+//        if (p.value() > max) {max = p.value(); a = Action(2,2);}
+//    }
+//    p = m_Q.find(MyQ(s,Action(-2,2)));
+//    if(p != m_Q.end()){
+//        if (p.value() > max) {max = p.value(); a = Action(-2,2);}
+//    }
+//    p = m_Q.find(MyQ(s,Action(2,-2)));
+//    if(p != m_Q.end()){
+//        if (p.value() > max) {max = p.value(); a = Action(2,-2);}
+//    }
+//    p = m_Q.find(MyQ(s,Action(-2,-2)));
+//    if(p != m_Q.end()){
+//        if (p.value() > max) {max = p.value(); a = Action(-2,-2);}
+//    }
 
     return a;
 }

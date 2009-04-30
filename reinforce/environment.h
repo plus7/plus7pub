@@ -14,6 +14,7 @@ public:
     Status getStatus() { return m_cur_status; }
 signals:
     void statusChanged(Status s);
+
 private:
     Status m_cur_status;
 };
