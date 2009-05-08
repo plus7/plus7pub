@@ -28,8 +28,10 @@ private:
     Ui::MainWindow *ui;
     Environment *env;
     Agent *agent;
+    bool stop;
 
 private slots:
+    void on_stopButton_clicked();
     void on_startButton_clicked();
     void on_initButton_clicked();
 };

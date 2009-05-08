@@ -15,9 +15,10 @@ public:
     void setAlpha(double alpha){ m_alpha = alpha; }
     void setGamma(double gamma){ m_gamma = gamma; }
     void setEps(double eps){ m_eps = eps; }
-    void doEpisode();
+    int doEpisode();
     void initQ();
     bool isFin(Status st);
+    void stop();
     Action selectAction(Status s);
 public slots:
     void changeAlpha(int i);
@@ -28,6 +29,7 @@ private:
     double m_alpha;
     double m_gamma;
     double m_eps;
+    bool m_stop;
     QMap< MyQ, Reward > m_Q;
 };
 

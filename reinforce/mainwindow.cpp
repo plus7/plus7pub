@@ -3,6 +3,10 @@
 #include "environment.h"
 
 #include <QMessageBox>
+#include <QApplication>
+
+#define max(a, b)  (((a) > (b)) ? (a) : (b))
+#define min(a, b)  (((a) < (b)) ? (a) : (b))
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -31,7 +35,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::recvStatusChanged(Status s)
 {
-
+    QString str;
+    str.sprintf("%d %d", s.first, s.second);
+    ui->textEdit->append(str);
+    QTableWidgetItem *item = ui->tableWidget->item(s.second,s.first);
+    if(item){
+        QColor c = item->backgroundColor();
+        c.setRed(min(c.red() + 1,255));
+        item->setBackgroundColor(c);
+    }
 }
 
 void MainWindow::on_initButton_clicked()
@@ -40,13 +52,34 @@ void MainWindow::on_initButton_clicked()
     if(Status(10,10) == Status(10,10)){
         QMessageBox::information(NULL, "", "true");
     }
-
 }
 
 void MainWindow::on_startButton_clicked()
 {
-    agent->initQ();
-    for(int i=0;i<3;i++){
-        agent->doEpisode();
+    stop = false;
+    int i,j;
+    for(i=0;i<20;i++){
+        for(j=0;j<10;j++){
+            QTableWidgetItem* item = ui->tableWidget->item(j,i);
+            if(item){
+                item->setBackground(Qt::SolidPattern);
+            }
+        }
     }
+    env->initStatus();
+    agent->initQ();
+    for(int i=0;i<1000;i++){
+        if(stop) break;
+        ui->textEdit->append("try");
+        int ret = agent->doEpisode();
+        QString str;
+        str.sprintf("%d",ret);
+        ui->textEdit_2->append(str);
+    }
+}
+
+void MainWindow::on_stopButton_clicked()
+{
+    stop = true;
+    agent->stop();
 }
