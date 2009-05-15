@@ -86,6 +86,85 @@ void Agent::initQ()
     }
 }
 
+void Agent::initE()
+{
+        m_e.clear();
+    int i,j;
+
+    m_e.insert(MyQ(Status(0,0), Action(1,0)), 0);
+    m_e.insert(MyQ(Status(0,0), Action(1,1)), 0);
+    m_e.insert(MyQ(Status(0,0), Action(0,1)), 0);
+
+    m_e.insert(MyQ(Status(19,0), Action(0,1)), 0);
+    m_e.insert(MyQ(Status(19,0), Action(-1,1)), 0);
+    m_e.insert(MyQ(Status(19,0), Action(-1,0)), 0);
+
+    m_e.insert(MyQ(Status(0,9), Action(1,0)), 0);
+    m_e.insert(MyQ(Status(0,9), Action(1,-1)), 0);
+    m_e.insert(MyQ(Status(0,9), Action(0,-1)), 0);
+
+    m_e.insert(MyQ(Status(19,9), Action(-1,0)), 0);
+    m_e.insert(MyQ(Status(19,9), Action(-1,-1)), 0);
+    m_e.insert(MyQ(Status(19,9), Action(0,-1)), 0);
+
+    for(i=1;i<19;i++){
+        m_e.insert(MyQ(Status(i,0), Action(1,0)), 0);
+        m_e.insert(MyQ(Status(i,0), Action(-1,0)), 0);
+        m_e.insert(MyQ(Status(i,0), Action(1,1)), 0);
+        m_e.insert(MyQ(Status(i,0), Action(-1,1)), 0);
+        m_e.insert(MyQ(Status(i,0), Action(0,1)), 0);
+
+        m_e.insert(MyQ(Status(i,9), Action(1,0)), 0);
+        m_e.insert(MyQ(Status(i,9), Action(-1,0)), 0);
+        m_e.insert(MyQ(Status(i,9), Action(1,-1)), 0);
+        m_e.insert(MyQ(Status(i,9), Action(-1,-1)), 0);
+        m_e.insert(MyQ(Status(i,9), Action(0,-1)), 0);
+    }
+    for(j=1;j<9;j++){
+        m_e.insert(MyQ(Status(0, i), Action(0,1)), 0);
+        m_e.insert(MyQ(Status(0, i), Action(0,-1)), 0);
+        m_e.insert(MyQ(Status(0, i), Action(1,1)), 0);
+        m_e.insert(MyQ(Status(0, i), Action(1,-1)), 0);
+        m_e.insert(MyQ(Status(0, i), Action(1,0)), 0);
+
+        m_e.insert(MyQ(Status(19,i), Action(0,1)), 0);
+        m_e.insert(MyQ(Status(19,i), Action(0,-1)), 0);
+        m_e.insert(MyQ(Status(19,i), Action(-1,1)), 0);
+        m_e.insert(MyQ(Status(19,i), Action(-1,-1)), 0);
+        m_e.insert(MyQ(Status(19,i), Action(-1,0)), 0);
+    }
+    for(i=0;i<20;i++){
+        for(j=0;j<10;j++){
+            m_e.insert(MyQ(Status(i,j), Action(0,0)), 0);
+        }
+    }
+    for(i=1;i<19;i++){
+        for(j=1;j<9;j++){
+            m_e.insert(MyQ(Status(i,j), Action(1,0)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(-1,0)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(0,1)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(0,-1)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(1,1)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(1,-1)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(-1,1)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(-1,-1)), 0);
+        }
+    }
+    for(i=2;i<18;i++){
+        for(j=2;j<8;j++){
+            m_e.insert(MyQ(Status(i,j), Action(2,0)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(-2,0)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(0,2)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(0,-2)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(2,2)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(-2,2)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(2,-2)), 0);
+            m_e.insert(MyQ(Status(i,j), Action(-2,-2)), 0);
+        }
+    }
+}
+
+
 void Agent::changeAlpha(int i)
 {
     setAlpha(i/10);
@@ -262,7 +341,30 @@ int Agent::doEpisode()
         Reward old_Q_sa = m_Q.find(MyQ(s, a)).value();
         Reward old_Q_sa_dash = m_Q.find(MyQ(s_dash, a_dash)).value();
 
-        m_Q[MyQ(s, a)] = old_Q_sa + m_alpha*(r + m_gamma*old_Q_sa_dash - old_Q_sa);
+        Reward delta = r + m_gamma*old_Q_sa_dash - old_Q_sa;
+        m_e[MyQ(s, a)] = m_e[MyQ(s, a)] + 1;
+
+
+        //Normal Sarsa
+//        Reward newval = old_Q_sa + m_alpha*(delta);
+//        m_Q[MyQ(s, a)] = newval;
+//        Reward debugval = m_Q[MyQ(s, a)];
+
+        //ƒÉ
+        //‚·‚×‚Ä‚Ìs,a‚É‘Î‚µ:
+        //Q(s,a) © Q(s,a){ƒ¿ƒÂe(s,a)
+        //e(s,a)© ƒÁƒÉe(s,a)
+        // ˆê——
+        QMap< MyQ, Reward >::iterator p;
+        for(p=m_Q.begin(); p!=m_Q.end(); p++)
+        {
+            MyQ q(p.key());
+            m_Q[p.key()] = m_Q[p.key()] + m_alpha * delta * m_e[p.key()];
+            m_e[p.key()] = m_gamma * 0.9 * m_e[p.key()];
+        }
+
+
+        emit updateQ();
         s = s_dash;
         a = a_dash;
         ret++;

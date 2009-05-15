@@ -1414,6 +1414,9 @@
          </item>
         </widget>
        </item>
+       <item>
+        <widget class="SarsaView" name="sView" native="true"/>
+       </item>
       </layout>
      </widget>
     </item>
@@ -1462,6 +1465,14 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>SarsaView</class>
+   <extends>QWidget</extends>
+   <header>sarsaview.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

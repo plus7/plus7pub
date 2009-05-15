@@ -9,9 +9,12 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
     environment.cpp \
-    agent.cpp
+    agent.cpp \
+    sarsaview.cpp \
+    ../Acrobot/utils.cpp
 HEADERS += mainwindow.h \
     environment.h \
     agent.h \
-    defs.h
+    defs.h \
+    sarsaview.h
 FORMS += mainwindow.ui

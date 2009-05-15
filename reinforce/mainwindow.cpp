@@ -26,6 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
             agent, SLOT(changeGamma(int)));
     connect(ui->epsilonCombo, SIGNAL(currentIndexChanged(int)),
             agent, SLOT(changeEps(int)));
+
+    ui->sView->setQ(&(agent->m_Q));
+    connect(agent, SIGNAL(updateQ()),
+            ui->sView, SLOT(update()));
 }
 
 MainWindow::~MainWindow()
@@ -68,6 +72,7 @@ void MainWindow::on_startButton_clicked()
     }
     env->initStatus();
     agent->initQ();
+    agent->initE();
     for(int i=0;i<1000;i++){
         if(stop) break;
         ui->textEdit->append("try");
