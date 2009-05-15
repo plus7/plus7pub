@@ -4,3 +4,5 @@ ui_*.h
 debug/
 release/
 *.user
+*.Debug
+*.Release
